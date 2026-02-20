@@ -1,4 +1,3 @@
-
 # Auth Frontend Boilerplate
 
 A modern, production-ready authentication and authorization boilerplate for React applications.
@@ -10,6 +9,49 @@ A modern, production-ready authentication and authorization boilerplate for Reac
 - Type-safe API integration
 - Material UI components
 - Scalable project structure
+
+## Project Structure
+
+```
+src/
+  api/
+    axios.ts
+
+  app/
+    store.ts
+    hooks.ts
+
+  layouts/
+    AppLayout.tsx
+
+  routes/
+    index.tsx
+
+  types/
+    auth.ts
+
+  config/
+    menu.ts
+
+  features/
+    auth/
+      components/
+        LoginForm.tsx
+      pages/
+        Login.tsx
+      authSlice.ts
+      authAPI.ts
+
+    users/
+      pages/
+        Users.tsx
+      usersAPI.ts
+
+    dashboard/
+      pages/
+        Dashboard.tsx
+
+```
 
 ## Tech Stack
 

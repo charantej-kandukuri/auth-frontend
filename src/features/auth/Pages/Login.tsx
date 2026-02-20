@@ -1,4 +1,4 @@
-import { login } from "../features/auth/authSlice";
+import { login } from "../../auth/authSlice";
 import {
   TextField,
   Button,
@@ -11,7 +11,7 @@ import {
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { useNavigate } from "react-router-dom";
 
 // ✅ Validation Schema

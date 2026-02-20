@@ -4,9 +4,10 @@ import {
   getMe,
   login as loginService,
   logout as logoutService,
-} from "./auth.service";
+} from "./authAPI";
 import type { RootState } from "../../app/store";
-import type { AuthState } from "./auth.types";
+import type { AuthState } from "../../types/auth.types";
+import type { AppStartListening } from "../../app/listnerMiddleware";
 
 const initialState: AuthState = {
   user: null,
@@ -94,6 +95,7 @@ const authSlice = createSlice({
 
       // logout
       .addCase(logout.fulfilled, (state) => {
+        state.error = null;
         state.user = null;
         state.isAuthenticated = false;
       });
@@ -102,5 +104,25 @@ const authSlice = createSlice({
 
 export const selectAuth = (state: RootState) => state.auth;
 export const selectAuthStatus = (state: RootState) => state.auth.isLoading;
+
+export const addAuthListners = (startAppListening: AppStartListening) => {
+  startAppListening({
+    actionCreator: login.rejected,
+    effect: async () => {
+      const { toast, Bounce } = await import("react-toastify");
+      toast.error("Login failed!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
+    },
+  });
+};
 
 export default authSlice.reducer;
