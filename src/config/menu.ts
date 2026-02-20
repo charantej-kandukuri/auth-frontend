@@ -1,4 +1,4 @@
-import type { Role } from "../features/auth/auth.types";
+import type { Role } from "../types/auth.types";
 
 export type MenuItem = {
   label: string;

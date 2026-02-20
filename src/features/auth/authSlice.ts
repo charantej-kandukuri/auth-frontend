@@ -4,9 +4,9 @@ import {
   getMe,
   login as loginService,
   logout as logoutService,
-} from "./auth.service";
+} from "./authAPI";
 import type { RootState } from "../../app/store";
-import type { AuthState } from "./auth.types";
+import type { AuthState } from "../../types/auth.types";
 
 const initialState: AuthState = {
   user: null,
@@ -94,6 +94,7 @@ const authSlice = createSlice({
 
       // logout
       .addCase(logout.fulfilled, (state) => {
+        state.error = null;
         state.user = null;
         state.isAuthenticated = false;
       });

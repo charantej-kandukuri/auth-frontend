@@ -1,10 +1,12 @@
 import { Route } from "react-router-dom";
 
-import Dashboard from "../pages/Dashboard";
+// guard components
 import RequireAuth from "../components/auth/RequireAuth";
-import AppLayout from "../layout/AppLayout";
 import { RequireRole } from "../components/auth/RequireRole";
-import Users from "../pages/Users";
+// pages
+import AppLayout from "../layout/AppLayout";
+import Dashboard from "../features/dashboard/pages/Dashboard";
+import Users from "../features/users/Pages/Users";
 
 const ProtectedRoutes = () => {
   return (
