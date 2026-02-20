@@ -5,38 +5,56 @@ const api = axios.create({
   withCredentials: true,
 });
 
-let onLogout: (() => void) | null = null;
+let isRefreshing = false;
 
-// ✅ Setter to inject logout later
-export const setLogoutHandler = (handler: () => void) => {
-  onLogout = handler;
-};
+api.interceptors.request.use((config) => {
+  return config;
+});
 
-api.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
+export const setupInterceptors = (onLogout: () => void) => {
+  api.interceptors.response.use(
+    (response) => response,
+    async (error) => {
+      const originalRequest = error.config;
 
-    // 🚫 Skip refresh loop
-    if (originalRequest.url?.includes("/auth/refresh")) {
-      return Promise.reject(error);
-    }
+      console.log("originalRequest :", originalRequest);
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-
-      try {
-        await api.post("/auth/refresh");
-        return api(originalRequest);
-      } catch (refreshError) {
-        // ✅ Use injected logout handler
-        // onLogout?.();
-        return Promise.reject(refreshError);
+      // ❌ If no response → network error
+      if (!error.response) {
+        throw error;
       }
-    }
 
-    return Promise.reject(error);
-  },
-);
+      // ❌ If refresh itself fails → logout
+      if (originalRequest.url === "/refresh") {
+        // onLogout();
+        throw error;
+      }
+
+      // ✅ Handle 401
+      if (error.response.status === 401 && !originalRequest._retry) {
+        originalRequest._retry = true;
+
+        try {
+          if (!isRefreshing) {
+            isRefreshing = true;
+
+            await api.post("/auth/refresh");
+
+            isRefreshing = false;
+          }
+
+          return api(originalRequest); // retry original request
+        } catch (err) {
+          isRefreshing = false;
+          // onLogout(); // session expired
+          console.error(err);
+          throw error;
+        }
+      }
+
+      throw error;
+    },
+  );
+};
 
 export default api;
