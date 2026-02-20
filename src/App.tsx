@@ -3,6 +3,7 @@ import { useAppDispatch } from "./app/hooks";
 
 import AppRoutes from "./routes";
 import { fetchMe } from "./features/auth/authSlice";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   const dispatch = useAppDispatch();
@@ -11,7 +12,12 @@ function App() {
     dispatch(fetchMe());
   }, [dispatch]);
 
-  return <AppRoutes />;
+  return (
+    <div>
+      <AppRoutes />
+      <ToastContainer />
+    </div>
+  );
 }
 
 export default App;
